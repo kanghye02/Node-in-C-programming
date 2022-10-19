@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+struct Ngay { 
+	int ngay, thang, nam; 
+};
+struct SinhVien {
+	int maSV; 
+	char hoTen[50]; 
+	int  GioiTinh; 
+	Ngay NgaySinh; 
+	char DiaChi[100]; 
+	char lop[12]; 
+	char khoa[7]; 
+};
+typedef struct SinhVien SV;
+
+struct Node { 
+	SV data; 
+	Node *link; 
+};
+typedef struct Node node;
+
+	
+struct List { 
+	node *first; 
+	node *last; 
+	};
+typedef struct List list;
+
+node* create(SV x) {
+	node *p=new node;
+	
+	if (p == NULL) {
+		printf("Khong du bo nho");
+		return NULL;
+	}
+	p->data = x;
+	p->link = NULL;
+	return p;
+};
+
+void SapxepmaSV(list &ds, node &x) {
+	node *p, *q;
+	
+	if (ds.first==NULL) {
+		ds.first = &x;
+		ds.last = NULL;
+		
+	}else {
+	
+		for (p= ds.first; p!= ds.last; p=p->link) {
+			
+			for(q= p->link; q!=NULL; q=q->link) {
+				if(p->data.maSV > q->data.maSV) {
+					SV x = p->data;
+					p->data = q->data;
+					q->data = x;
+				}
+			}
+		}
+	}
+};
+
+void KhoiTao(List &ds){
+    ds.first = NULL;
+    ds.last = NULL;
+};
+
+
+void Nhap(list &ds,SV &sv,Ngay &d, int n){
+	printf("NHAP THONG TIN SINH VIEN: \n");
+	
+	for (int i=0; i<n; i++) {
+		printf("Nhap ho ten sinh vien: "); fflush(stdin);	gets(sv.hoTen);
+		printf("Nhap ma sinh vien: ");			scanf("%d", &sv.maSV);
+		printf("Nhap gioi tinh sinh vien: "); 	scanf("%d", &sv.GioiTinh);
+		printf("Nhap ngay sinh sinh vien: "); 	scanf("%d", &d.ngay);
+		printf("Nhap thang sinh sinh vien: ");	scanf("%d", &d.thang);
+		printf("Nhap nam sinh sinh vien: "); 	scanf("%d", &d.nam);
+		printf("Nhap dia chi sinh vien: "); fflush(stdin);
+		gets(sv.DiaChi);
+		printf("Nhap lop sinh vien: "); fflush(stdin);
+		gets(sv.lop);
+		printf("Nhap khoa sinh vien: "); fflush(stdin);
+		gets(sv.khoa);
+	}
+		SV x;
+		node*p;
+		p = (node*)malloc(sizeof(node));
+		p = create(x);
+		if (ds.first == NULL) {
+			ds.first = p;
+			ds.last = p;
+		} else {
+			ds.last->link = p;
+			ds.last = NULL;
+			ds.last->link = NULL;
+		};
+		SapxepmaSV(ds,*p);
+	
+}
+
+void Xuat(List a){
+	node *p;	p=a.first;
+    while(p!=NULL){
+        printf("\nMa sinh vien : %d ",p->data.maSV);
+		printf("\n	Ho va ten : %s ",p->data.hoTen);
+		printf("\n	Gioi tinh : "); if(p->data.GioiTinh==1)	printf("Nam"); 	else if(p->data.GioiTinh==0)	printf("Nu"); 	else	printf("Bede");
+		printf("\n	Ngay sinh : ngay %d thang %d nam %d .",p->data.NgaySinh.ngay,p->data.NgaySinh.thang,p->data.NgaySinh.nam);
+		printf("\n	Hoc sinh lop : %s\n	Khoa %s .",p->data.lop,p->data.khoa);
+		printf("\n	Noi o : %s",p->data.DiaChi);
+		p=p->link;
+	}
+}
+
+int main() {
+	List ds;
+	SV sv;
+	Ngay d;
+	int n;
+	printf("Nhap so luong sinh vien: "); scanf("%d", &n);
+	KhoiTao(ds);
+	Nhap(ds,sv,d,n);
+	printf("Danh sach sinh vien\n");
+	Xuat(ds);
+	return 0;
+}
